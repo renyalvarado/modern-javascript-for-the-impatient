@@ -60,3 +60,49 @@ function constructCounter(initValue, step) {
 const myFirstCounter = constructCounter(0, 2)
 console.log("#5", myFirstCounter.count()) // 0
 console.log("#5", myFirstCounter.count()) // 2
+
+
+
+function f(a = 1, b = 2) { 
+    a = a + 5;
+    console.log(`a=${a}, b=${b}`);
+};
+f(); // a=1, b=2
+// f(a=5); // a=5, b=2
+// f(a = 7, b = 10); // a=7, b=10
+// f(b = 10, a = 7); // Order is required: a=10, b=7
+// In the web browser console doesn't show error but with Node.js in strict
+// mode shows this error: 
+// Uncaught TypeError TypeError: Assignment to constant variable. 
+// It looks like it something related to a redeclaration of the variable if
+// the name parameter is passed. If we want this behavior we should try
+// destructured parameters
+
+
+function average(...numbers) {
+    if (numbers.length === 0) {
+        return NaN;
+    }
+    let total = 0;
+    for(let number of numbers) {
+        total += number;
+    }
+    return total / numbers.length;
+}
+console.log("#7", `average(1, 2, 3) = ${average(1, 2, 3)}`);
+console.log("#7", `average(1, 1, 2) = ${average(1, 1, 2)}`);
+
+
+function capitalization(...str) {
+    if(str.length === 0) {
+        return "";
+    }
+    let strCamelCase = str[0].toUpperCase();
+    for (let i = 1; i < str.length; i++) {
+        strCamelCase += str[i];
+    }
+    return strCamelCase;
+}
+console.log("#8", capitalization());
+console.log("#8", capitalization(...""));
+console.log("#8", capitalization(..."bruno"));
