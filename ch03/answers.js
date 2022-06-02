@@ -63,7 +63,7 @@ console.log("#5", myFirstCounter.count()) // 2
 
 
 
-function f(a = 1, b = 2) { 
+function f(a = 1, b = 2) {
     a = a + 5;
     console.log(`a=${a}, b=${b}`);
 };
@@ -84,7 +84,7 @@ function average(...numbers) {
         return NaN;
     }
     let total = 0;
-    for(let number of numbers) {
+    for (let number of numbers) {
         total += number;
     }
     return total / numbers.length;
@@ -94,7 +94,7 @@ console.log("#7", `average(1, 1, 2) = ${average(1, 1, 2)}`);
 
 
 function capitalization(...str) {
-    if(str.length === 0) {
+    if (str.length === 0) {
         return "";
     }
     let strCamelCase = str[0].toUpperCase();
@@ -106,3 +106,65 @@ function capitalization(...str) {
 console.log("#8", capitalization());
 console.log("#8", capitalization(...""));
 console.log("#8", capitalization(..."bruno"));
+
+
+const mkString = (array, {
+    separator = ",",
+    leftDelimiter = "[",
+    rightDelimiter = "]"
+} = {}) => {
+    return leftDelimiter + array.join(separator) + rightDelimiter;
+
+}
+console.log("#9", mkString([1, 2, 3], { rightDelimiter: "}" }));
+
+
+for (let i = 0; i < 10; i++) {
+    const a = [];
+    setTimeout(() => console.log(i), 1000 * i);
+    i += 2;
+}
+// #10 It doesn't work because "var" declares a globally-scoped variable,
+// so every time we create a function to pass to setTimeout, this function
+// shared the same reference with the rest of the functions. In order to solve
+// that situation we can change declaration of the variable "i" from "var" to
+// "let" because this way "i" belongs to the "for" scope.
+
+
+const fac = n => n > 1 ? n * fac(n - 1) : 1;
+// #11 It needs hoisting because when that happen the previous instruction is
+// splitted in two parts: one for variable declaration, and the other one for
+// initialization; in this initialization we use a reference to the var name
+// that was previously declared.
+
+
+
+/* if (Math.random() < 0.5) {
+    say('Hello');
+    function say(greeting) { console.log(`${greeting}!`); }
+}
+say('Goodbye');
+ */
+// #12 It give us an error because the "say" function is hoisted to the block, 
+// so "say" is declare at the beginning of the block but with value undefined
+// until the last line of the block when is assign with body of the function
+
+
+function number_average(...my_numbers) {
+    let total = 0;
+    for (let my_number of my_numbers) {
+        if (typeof my_number === "number") {
+            total += my_number;
+        } else {
+            throw Error(`Element is not number: ${my_number}`);
+        }
+    }
+    return total / my_numbers.length;
+}
+
+console.log("#13", number_average(2, 3, 4));
+try {
+    console.log("#13", number_average(2, 3, "4"));
+} catch(e) {
+    console.log("#13 with error", e);
+}
