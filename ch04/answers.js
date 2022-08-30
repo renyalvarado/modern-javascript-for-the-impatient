@@ -202,4 +202,191 @@ class EmployeeWithPrivate {
   raiseSalary(percent) {
     this.#salary *= 1 + percent / 100;
   }
-};
+}
+
+
+// # 8
+class Parent {
+  constructor(value, children) {
+    this.value = value;
+    this.children = children;
+  }
+
+  depth() {
+    return 1 + Math.max(...this.children.map((n) => n.depth()));
+  }
+}
+
+class Leaf {
+  constructor(value) {
+    this.value = value;
+  }
+  depth() {
+    return 1;
+  }
+}
+const wolf = new Leaf("Canis Lupus");
+const dog = new Leaf("Canis Familiaris");
+const canisGenus = new Parent("Canis", [wolf, dog]);
+const cat = new Leaf("Felis catus");
+const felisGenus = new Parent("Felis", [cat]);
+const felidaeFamily = new Parent("Felidae", [felisGenus]);
+const animaliaKindom = new Parent("Animalia", [canisGenus, felidaeFamily]);
+console.log(`animaliaKindom.depth(): ${animaliaKindom.depth()}`);
+printSeparator("*");
+
+
+// # 9
+class Random {
+  static nextDouble(low, high) {
+    return Math.random() * (high - low) + low;
+  }
+
+  static nextInt(low, high) {
+    return Math.floor(Random.nextDouble(low, high));
+  }
+
+  static nextElement(array) {
+    const randomIndex = Random.nextInt(0, array.length);
+    return array[randomIndex];
+  }
+}
+console.log(`Random.nextDouble(10.5, 13.3): ${Random.nextDouble(10.5, 13.3)}`);
+console.log(`Random.nextInt(5, 9): ${Random.nextInt(5, 9)}`);
+const someLetters = ["A", "B", "C", "D", "E", "F", "G"];
+let randomLetter;
+for (let i = 1; i <= 10; i++) {
+  randomLetter = Random.nextElement(someLetters);
+  console.log(`${i}: Random.nextElement(someLetters): ${randomLetter}`);
+}
+printSeparator("*");
+
+
+// # 10
+class BankAccount {
+  #balance = 0;
+  get balance() {
+    return this.#balance;
+  }
+  deposit(amount) {
+    this.#balance += amount;
+  }
+  withdraw(amount) {
+    if (this.#balance >= amount) {
+      this.#balance -= amount};
+  }
+}
+
+class SavingsAccount extends BankAccount {
+  #interest;
+  constructor(interest) {
+    super();
+    this.#interest = interest / 100;
+  }
+  addInterest() {
+    const balance = this.balance;
+    const interestAmount = this.#interest * balance;
+    this.deposit(interestAmount);
+  }
+}
+class CheckingAccount extends BankAccount {
+  #fee;
+  constructor(fee) {
+    super();
+    this.#fee = fee;
+  }
+  withdraw(amount) {
+    super.withdraw(amount + this.#fee);
+  }
+}
+  
+const mySavingAccount = new SavingsAccount(10);
+mySavingAccount.deposit(100);
+mySavingAccount.addInterest();
+console.log(`mySavingAccount.balance: ${mySavingAccount.balance}`);
+mySavingAccount.addInterest();
+console.log(`mySavingAccount.balance: ${mySavingAccount.balance}`);
+
+const checkingAccount = new CheckingAccount(3);
+checkingAccount.deposit(100);
+console.log(`checkingAccount.balance: ${checkingAccount.balance}`);
+checkingAccount.withdraw(10);
+console.log(`checkingAccount.balance: ${checkingAccount.balance}`);
+printSeparator("*");
+
+
+// # 11
+console.log("+----------------------------+");
+console.log("|         mySavingAccount    |        +-------------------------------+");
+console.log("|         ---------------    |        |   SavingsAccount.prototype    |");
+console.log("| [[Prototype]] = -----------+-------->---------------------------    |");
+console.log("|                            |        |   [[Prototype]] =  -----------+----------+");
+console.log("|      #balance = 100        |        |                               |          |");
+console.log("|     #interest = 10         |        |     addInterest = function    |          |");
+console.log("|                            |        |                               |          |");
+console.log("+----------------------------+        +-------------------------------+          |");
+console.log("                                                                                 |");
+console.log("                                                                                 |");
+console.log("+-----------------------------+      +-------------------------------+           |");
+console.log("|       myCheckingAccount     |      |                               |           |");
+console.log("|       -----------------     |      |   CheckingAccount.prototype   |           |");
+console.log("| [[Prototype]] = ------------+------>----------------------------   |           |");
+console.log("|                             |      |    [[Prototype]] = -----------+-------+   |");
+console.log("|      #balance = 100         |      |                               |       |   |");
+console.log("|          #fee = 3           |      |         withdraw = function   |       |   |");
+console.log("|                             |      |                               |       |   |");
+console.log("+-----------------------------+      +-------------------------------+       |   |");
+console.log("                                                                             |   |");
+console.log("                                 v                                           |   |");
+console.log("                                                                             |   |");
+console.log("                                                                             |   |");
+console.log("                                     +-------------------------------+       |   |");
+console.log("                                     |     BankAccount.prototype     <-------+---+");
+console.log("                                     |     ---------------------     |");
+console.log("                                     |  [[Prototype]] = -------------+-----------+");
+console.log("                                     |                               |           |");
+console.log("                                     |        deposit = function     |           |");
+console.log("                                     |                               |           |");
+console.log("                                     |       withdraw = function     |           |");
+console.log("                                     |                               |           |");
+console.log("                                     +-------------------------------+           |");
+console.log("                                                                                 |");
+console.log("                                                                                 |");
+console.log("                                                                                 |");
+console.log("                                     +--------------------------------+          |");
+console.log("                                     |                                |          |");
+console.log("                                     |          Object.prototype      <----------+");
+console.log("                                     |     ---------------------      |");
+console.log("                                     |  [[Prototype]] = null          |");
+console.log("                                     |                                |");
+console.log("                                     +--------------------------------+");
+printSeparator("*");
+
+// # 12
+// It doesn't work because "this" refer to windows when the listener is called.
+// const button = document.getElementById('button1');
+// button.addEventListener('click', event => {
+//   event.target.classList.toggle('clicked');
+// });
+
+
+// # 13
+const harrysAccount = new BankAccount();
+const action = harrysAccount.deposit.bind(harrysAccount);
+action(1000)
+console.log(`harrysAccount.balance: ${harrysAccount.balance}`);
+printSeparator("*");
+
+// # 14
+function invokeLater(f, delay) {
+  setTimeout(() => f(delay), delay);
+}
+function depositInto(account) {
+  return function(amount) {
+    account.deposit(amount);
+  };
+}
+const sallysAccount = new BankAccount();
+invokeLater(depositInto(sallysAccount), 1000);
+console.log(`sallysAccount.balance: ${sallysAccount.balance}`);
+setTimeout(() => console.log(`sallysAccount.balance: ${sallysAccount.balance}`), 2000);
